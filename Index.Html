@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Critique</title>
+    <style>
+        :root {
+            --primary-bg: #041C23;
+            --secondary-bg: #0A3641;
+            --accent-color: #21E6C1;
+            --text-light: #E8F9FD;
+            --text-muted: #7FA9B5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-light);
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            background-color: rgba(4, 28, 35, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid var(--accent-color);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        #search-box {
+            padding: 0.6rem 1rem;
+            width: 300px;
+            border-radius: 20px;
+            border: 1px solid var(--accent-color);
+            background-color: var(--secondary-bg);
+            color: var(--text-light);
+            outline: none;
+        }
+
+        .main-content { padding: 2rem; }
+        
+        .section-title {
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+        }
+
+        .hidden { display: none !important; }
+
+        .hero-picks {
+            display: flex;
+            gap: 2rem;
+            height: 45vh;
+            margin-bottom: 3rem;
+        }
+
+        .hero-card {
+            flex: 1;
+            background-color: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: 1px solid var(--secondary-bg);
+        }
+
+        .hero-card:hover {
+            transform: scale(1.02);
+            border-color: var(--accent-color);
+        }
+
+        .hero-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+        }
+
+        .hero-info {
+            position: absolute;
+            bottom: 0;
+            padding: 1.5rem;
+            background: linear-gradient(transparent, #000);
+            width: 100%;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .movie-card {
+            background-color: #000;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            text-align: center;
+            padding-bottom: 10px;
+            border: 1px solid transparent;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .movie-card h3 {
+            font-size: 1rem;
+            padding: 10px 5px 0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--secondary-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 900px;
+            position: relative;
+            border: 1px solid var(--accent-color);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: var(--accent-color);
+            cursor: pointer;
+        }
+
+        .modal-body {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .modal-poster {
+            width: 300px;
+            border-radius: 8px;
+        }
+
+        .modal-details h2 { color: var(--accent-color); margin-bottom: 10px; }
+        .modal-details p { margin-bottom: 8px; line-height: 1.5; }
+        
+        .trailer-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #000;
+            text-align: center;
+            border: 1px dashed var(--accent-color);
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">Screen Critique</div>
+        <ul class="nav-links">
+            <li><a href="#upcoming">Upcoming</a></li>
+            <li><a href="#trending">Trending</a></li>
+            <li><a href="#best-ever">Best Ever</a></li>
+            <li><a href="#todays-pick">Today's Pick</a></li>
+            <li><a href="#anime">Anime</a></li>
+        </ul>
+        <div class="search-container">
+            <input type="text" id="search-box" placeholder="Search movies... (Press Enter)">
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <section id="search-section" class="hidden">
+            <h2 class="section-title">Search Results</h2>
+            <div class="movie-grid" id="search-grid"></div>
+        </section>
+
+        <div id="home-view">
+            <section class="hero-picks" id="hero-picks"></section>
+
+            <section class="popular-movies">
+                <h2 class="section-title">Other Popular Movies</h2>
+                <div class="movie-grid" id="popular-grid"></div>
+            </section>
+        </div>
+    </main>
+
+    <div id="movie-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = 'e30f5ba0';
+        const BASE_URL = `https://www.omdbapi.com/?apikey=${API_KEY}`;
+
+        const searchBox = document.getElementById('search-box');
+        const searchSection = document.getElementById('search-section');
+        const searchGrid = document.getElementById('search-grid');
+        const homeView = document.getElementById('home-view');
+        const heroPicks = document.getElementById('hero-picks');
+        const popularGrid = document.getElementById('popular-grid');
+        const modal = document.getElementById('movie-modal');
+        const modalBody = document.getElementById('modal-body');
+        const closeBtn = document.querySelector('.close-btn');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadHeroPicks();
+            loadPopularMovies();
+        });
+
+        async function loadHeroPicks() {
+            const picks = ['Interstellar', 'The Matrix']; 
+            for (let title of picks) {
+                const res = await fetch(`${BASE_URL}&t=${title}`);
+                const data = await res.json();
+                if(data.Response === "True") {
+                    const card = document.createElement('div');
+                    card.className = 'hero-card';
+                    card.onclick = () => openModal(data.imdbID);
+                    
+                    const posterSrc = data.Poster !== "N/A" ? data.Poster : "";
+                    
+                    card.innerHTML = `
+                        ${posterSrc ? `<img src="${posterSrc}" alt="${data.Title}">` : ''}
+                        <div class="hero-info">
+                            <h2>${data.Title}</h2>
+                            <p>${data.Year} • ${data.Genre}</p>
+                        </div>
+                    `;
+                    heroPicks.appendChild(card);
+                }
+            }
+        }
+
+        async function loadPopularMovies() {
+            const res = await fetch(`${BASE_URL}&s=avengers&type=movie`);
+            const data = await res.json();
+            
+            if (data.Response === "True") {
+                renderMovies(data.Search, popularGrid);
+            }
+        }
+
+        searchBox.addEventListener('keypress', async (e) => {
+            if (e.key === 'Enter') {
+                const query = searchBox.value.trim();
+                if (query) {
+                    homeView.classList.add('hidden');
+                    searchSection.classList.remove('hidden');
+                    
+                    const res = await fetch(`${BASE_URL}&s=${query}&type=movie`);
+                    const data = await res.json();
+                    
+                    if (data.Response === "True") {
+                        renderMovies(data.Search, searchGrid);
+                    } else {
+                        searchGrid.innerHTML = `<p>No movies found for "${query}".</p>`;
+                    }
+                } else {
+                    homeView.classList.remove('hidden');
+                    searchSection.classList.add('hidden');
+                }
+            }
+        });
+
+        function renderMovies(movies, container) {
+            container.innerHTML = '';
+            const limitedMovies = movies.slice(0, 8); 
+            
+            limitedMovies.forEach(movie => {
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                card.onclick = () => openModal(movie.imdbID);
+                
+                const posterSrc = movie.Poster !== "N/A" ? movie.Poster : "";
+                
+                card.innerHTML = `
+                    ${posterSrc ? `<img src="${posterSrc}" alt="${movie.Title}">` : '<div style="height:300px; background:#000;"></div>'}
+                    <h3>${movie.Title}</h3>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function openModal(id) {
+            const res = await fetch(`${BASE_URL}&i=${id}&plot=full`);
+            const movie = await res.json();
+            
+            const posterSrc = movie.Poster !== "N/A" ? movie.Poster : "";
+            
+            modalBody.innerHTML = `
+                ${posterSrc ? `<img src="${posterSrc}" class="modal-poster">` : '<div class="modal-poster" style="background:#000;"></div>'}
+                <div class="modal-details">
+                    <h2>${movie.Title}</h2>
+                    <p><strong>Release Date:</strong> ${movie.Released}</p>
+                    <p><strong>Director:</strong> ${movie.Director}</p>
+                    <p><strong>Cast:</strong> ${movie.Actors}</p>
+                    <p><strong>Genre:</strong> ${movie.Genre}</p>
+                    <p><strong>Ratings:</strong> ${movie.imdbRating}/10</p>
+                    <p><strong>Story Overview:</strong> ${movie.Plot}</p>
+                    
+                    <div class="trailer-box">
+                        [Trailer Video Player will go here once TMDB API is connected]
+                    </div>
+                </div>
+            `;
+            modal.style.display = 'flex';
+        }
+
+        closeBtn.onclick = () => modal.style.display = 'none';
+        window.onclick = (e) => {
+            if (e.target === modal) modal.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
