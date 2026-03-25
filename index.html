@@ -23,7 +23,6 @@
             z-index: 1000; flex-wrap: wrap; gap: 1rem;
         }
 
-        /* Responsive Logo Size using Clamp */
         .logo { 
             font-size: clamp(1.4rem, 4vw, 2rem); 
             font-weight: bold; color: var(--accent-color); 
@@ -31,7 +30,6 @@
         }
         .logo:hover { transform: scale(1.05); text-shadow: 0 0 15px var(--accent-color); }
 
-        /* Mobile Menu Toggle (Hidden on Desktop) */
         .menu-toggle {
             display: none; font-size: 2rem; color: var(--accent-color);
             cursor: pointer; padding: 0 10px; font-weight: bold;
@@ -102,7 +100,7 @@
 
         .loading-trigger { height: 60px; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-weight: bold; margin-top: 2rem; }
 
-        /* MODAL STYLING (Static Close Button Update) */
+        /* MODAL STYLING */
         .modal { 
             display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; 
             background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center; 
@@ -110,7 +108,7 @@
         .modal-content { 
             background-color: var(--primary-bg); border-radius: 10px; width: 95%; max-width: 1000px; 
             max-height: 90vh; position: relative; border: 1px solid var(--accent-color);
-            display: flex; flex-direction: column; overflow: hidden; /* Keeps close button static */
+            display: flex; flex-direction: column; overflow: hidden; 
         }
         .close-btn { 
             position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: var(--accent-color); 
@@ -119,10 +117,9 @@
         }
         .close-btn:hover { transform: scale(1.2); }
         
-        /* The body scrolls, not the container */
         .modal-body { 
             display: flex; gap: 2rem; flex-wrap: wrap; padding: 2.5rem 2rem 2rem; 
-            overflow-y: auto; max-height: 90vh; 
+            overflow-y: auto; max-height: 90vh; flex-direction: row;
         }
         
         .modal-poster { width: 300px; height: auto; max-height: 450px; object-fit: contain; border-radius: 8px; }
@@ -138,13 +135,12 @@
 
         @media (max-width: 900px) { .movie-grid.pick-layout { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } }
         
-        /* MOBILE VIEWPORT FIXES */
+        /* 📱 BULLETPROOF MOBILE VIEWPORT FIXES */
         @media (max-width: 768px) {
             .navbar { flex-direction: row; justify-content: space-between; align-items: center; }
             .menu-toggle { display: block; }
             .search-container { order: 3; width: 100%; max-width: 100%; margin-top: 10px; }
             
-            /* Hidden by default on mobile, toggled via JS */
             .nav-links { 
                 display: none; flex-direction: column; width: 100%; order: 4; 
                 background: var(--primary-bg); position: absolute; top: 100%; left: 0; 
@@ -155,8 +151,20 @@
             
             .hero-picks { flex-direction: column; height: auto; }
             .hero-card { height: 350px; }
-            .modal-body { flex-direction: column; align-items: center; text-align: center; padding-top: 3.5rem; }
-            .modal-details h2 { padding-right: 0; }
+            
+            /* The Layout Fix for the Modal on Mobile */
+            .modal-content { max-width: 95vw; width: 95%; max-height: 85vh; }
+            .modal-body { 
+                flex-direction: column !important; /* Force items to stack vertically */
+                flex-wrap: nowrap !important;
+                align-items: center; 
+                text-align: center; 
+                padding: 3.5rem 1rem 1.5rem !important; 
+            }
+            .modal-poster { width: 60% !important; max-width: 200px !important; margin-bottom: 10px; }
+            .modal-details { width: 100% !important; min-width: 0 !important; flex: none !important; }
+            .modal-details h2 { padding-right: 0 !important; font-size: 1.5rem; }
+            
             .movie-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
             .movie-card img { height: 220px; }
         }
@@ -232,18 +240,14 @@
             setupIntersectionObserver();
         });
 
-        // Mobile Menu Toggle
         DOM.mobileBtn.addEventListener('click', () => {
             DOM.navList.classList.toggle('show-nav');
         });
 
         function setActiveTab(category) {
             DOM.navItems.forEach(item => {
-                if (item.getAttribute('data-category') === category) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
+                if (item.getAttribute('data-category') === category) item.classList.add('active');
+                else item.classList.remove('active');
             });
         }
 
@@ -252,7 +256,7 @@
             DOM.heroContainer.classList.remove('hidden');
             setActiveTab('home');
             loadCategory('home', true);
-            DOM.navList.classList.remove('show-nav'); // Close mobile menu
+            DOM.navList.classList.remove('show-nav'); 
         });
 
         DOM.navItems.forEach(item => {
@@ -262,7 +266,7 @@
                 const cat = e.target.getAttribute('data-category');
                 setActiveTab(cat);
                 loadCategory(cat, true);
-                DOM.navList.classList.remove('show-nav'); // Close mobile menu after click
+                DOM.navList.classList.remove('show-nav'); 
             });
         });
 
@@ -341,7 +345,7 @@
                     `;
                     DOM.heroPicks.appendChild(card);
                 });
-            } catch(e) { console.error(e); }
+            } catch(e) {}
         }
 
         async function loadCategory(catKey, isNewCategory = false) {
@@ -467,11 +471,9 @@
             observer.observe(DOM.loadingTrigger);
         }
 
-        // Global function for Synopsis Read More button
         window.toggleSynopsis = function(btn) {
             const contentSpan = btn.previousElementSibling;
             const fullText = contentSpan.getAttribute('data-full');
-            
             if (btn.innerText === 'Read More') {
                 contentSpan.innerText = fullText;
                 btn.innerText = ' Show Less';
@@ -486,7 +488,6 @@
             const genres = anime.genres ? anime.genres.map(g => g.name).join(', ') : 'N/A';
             const studios = anime.studios ? anime.studios.map(s => s.name).join(', ') : 'N/A';
             
-            // Read More Truncation Logic
             const fullSynopsis = anime.synopsis || 'No synopsis available.';
             let shortSynopsis = fullSynopsis;
             let readMoreHTML = '';
@@ -495,6 +496,9 @@
                 shortSynopsis = fullSynopsis.substring(0, 200) + '...';
                 readMoreHTML = `<span class="read-more-btn" onclick="toggleSynopsis(this)">Read More</span>`;
             }
+
+            // Replacing quotes to prevent HTML breaking inside data attributes
+            const safeSynopsis = fullSynopsis.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
             DOM.modalBody.innerHTML = `
                 <img src="${anime.images.jpg.large_image_url}" class="modal-poster">
@@ -506,7 +510,7 @@
                     <p><strong>Genres:</strong> ${genres}</p>
                     <p><strong>Score:</strong> ${anime.score || 'N/A'}/10</p>
                     <p><strong>Synopsis:</strong> 
-                        <span class="synopsis-content" data-full="${fullSynopsis.replace(/"/g, '&quot;')}">${shortSynopsis}</span>
+                        <span class="synopsis-content" data-full="${safeSynopsis}">${shortSynopsis}</span>
                         ${readMoreHTML}
                     </p>
                     ${anime.trailer.embed_url ? `
@@ -517,9 +521,7 @@
             `;
             DOM.modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
-            
-            // Reset scroll position to top when opened
-            DOM.modalBody.scrollTop = 0;
+            DOM.modalBody.scrollTop = 0; // Ensures user starts at the top of the content
         }
 
         const closeAndStopVideo = () => {
