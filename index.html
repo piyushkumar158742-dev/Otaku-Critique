@@ -76,7 +76,14 @@
         .ep-controls { display: flex; justify-content: center; align-items: center; gap: 5px; margin-top: 10px; padding: 0 5px; }
         .ep-btn { background: var(--primary-bg); color: var(--text-light); border: 1px solid var(--accent-color); border-radius: 4px; width: 30px; height: 30px; cursor: pointer; font-weight: bold; display: flex; justify-content: center; align-items: center; transition: 0.2s;}
         .ep-btn:hover { background: var(--accent-color); color: var(--primary-bg); }
+        
         .ep-input { width: 45px; height: 30px; text-align: center; background: var(--primary-bg); color: var(--text-light); border: 1px solid var(--text-muted); border-radius: 4px; outline: none; font-weight: bold;}
+        
+        /* HIDE DEFAULT BROWSER NUMBER SPINNERS */
+        .ep-input::-webkit-outer-spin-button,
+        .ep-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .ep-input[type=number] { -moz-appearance: textfield; }
+
         .ep-total { color: var(--text-muted); font-size: 0.9rem; margin-left: 5px;}
         .tracker-empty { grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 2rem; }
 
@@ -188,14 +195,11 @@
     <script>
         const API_BASE = 'https://api.jikan.moe/v4';
 
-        // ================= DATABASE =================
         let otakuDatabase = JSON.parse(localStorage.getItem('otakuTracker')) || {};
         let currentActiveAnime = null;
 
         function saveDatabase() { localStorage.setItem('otakuTracker', JSON.stringify(otakuDatabase)); }
 
-        // ================= BANNER LOGIC =================
-        // Permanently ban 'Steel Ball Run' from showing up anywhere
         function isBanned(anime) {
             const title = (anime.title_english || anime.title || '').toLowerCase();
             return title.includes('steel ball run');
@@ -276,7 +280,6 @@
                 const res = await fetch(`${API_BASE}/anime?q=${encodeURIComponent(query)}&sfw=true`);
                 const data = await res.json();
                 
-                // Filter out broken trailers, images, and banned animes
                 const validAnimes = data.data.filter(a => a.images.jpg.large_image_url && a.trailer.embed_url && !isBanned(a));
                 renderGrid(validAnimes, false, true);
             }
@@ -433,8 +436,8 @@
                 const maxHtml = item.totalEpisodes ? `max="${item.totalEpisodes}"` : '';
                 
                 let controlsHTML = '';
-                // Only show episode controls if it is in Watching AND it is NOT a movie
-                if(item.status === 'watching' && item.type !== 'Movie') {
+                // Hide episode counters for movies OR if the anime is only 1 episode long
+                if(item.status === 'watching' && item.type !== 'Movie' && item.totalEpisodes !== 1) {
                     controlsHTML = `
                         <div class="ep-controls" onclick="event.stopPropagation()">
                             <button class="ep-btn" onclick="changeEp(${item.id}, -1)">-</button>
@@ -481,18 +484,13 @@
             updateEpData(id, parseInt(val) || 1);
         }
 
-        // The Strict Episode Cap Logic
         function updateEpData(id, val) {
             const entry = otakuDatabase[id];
             
-            // Hard limit: Can never drop below 1
             if(val < 1) val = 1; 
             
-            // Limit based on known episodes
             if(entry.totalEpisodes && val >= entry.totalEpisodes) {
-                val = entry.totalEpisodes; // Cap the value
-                
-                // ONLY move to completed if the anime has actually finished airing in real life
+                val = entry.totalEpisodes; 
                 if(entry.airingStatus === 'Finished Airing') {
                     entry.status = 'completed'; 
                 }
@@ -513,14 +511,12 @@
             const anime = currentActiveAnime;
             if(!anime) return;
             
-            // Constraint: Cannot add uncompleted shows to completed
             const canComplete = anime.status === 'Finished Airing';
             if (status === 'completed' && !canComplete) {
                 alert("This anime has not finished airing yet! You cannot mark it as completed.");
                 return;
             }
 
-            // Constraint: Cannot add upcoming to watching
             const isUpcoming = (anime.status === 'Not yet aired' || anime.status === 'Upcoming');
             if (isUpcoming && status === 'watching') {
                 return; 
@@ -532,9 +528,9 @@
                 poster: anime.images.jpg.large_image_url,
                 totalEpisodes: anime.episodes,
                 type: anime.type,
-                airingStatus: anime.status, // Save to check later
+                airingStatus: anime.status, 
                 status: status,
-                progress: otakuDatabase[anime.mal_id]?.progress || 1 // Defaults to 1
+                progress: otakuDatabase[anime.mal_id]?.progress || 1
             };
             
             if(status === 'completed' && anime.episodes) otakuDatabase[anime.mal_id].progress = anime.episodes;
@@ -572,7 +568,6 @@
             const genres = anime.genres ? anime.genres.map(g => g.name).join(', ') : 'N/A';
             const studios = anime.studios ? anime.studios.map(s => s.name).join(', ') : 'N/A';
             
-            // Airing Status Logic
             const isUpcoming = (anime.status === 'Not yet aired' || anime.status === 'Upcoming');
             const canComplete = (anime.status === 'Finished Airing');
             const isMovie = (anime.type === 'Movie');
@@ -586,10 +581,14 @@
             }
             const safeSynopsis = fullSynopsis.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
-            // Generate Buttons with Strict Logic applied
             let actionButtonsHTML = '';
-            if (isMovie) {
-                actionButtonsHTML = `<button id="btn-completed" class="action-btn btn-completed" onclick="updateListStatus('completed')" ${!canComplete ? 'disabled title="Movie has not aired yet"' : ''}>✔ Completed</button>`;
+            // If it's a Movie OR has exactly 1 episode, hide the "Watching" button. 
+            // It only makes sense to "Plan to Watch" or mark "Completed".
+            if (isMovie || anime.episodes === 1) {
+                actionButtonsHTML = `
+                    <button id="btn-completed" class="action-btn btn-completed" onclick="updateListStatus('completed')" ${!canComplete ? 'disabled title="Has not aired yet"' : ''}>✔ Completed</button>
+                    <button id="btn-planned" class="action-btn btn-planned" onclick="updateListStatus('planned')">🗓 Going to Watch</button>
+                `;
             } else {
                 actionButtonsHTML = `
                     <button id="btn-completed" class="action-btn btn-completed" onclick="updateListStatus('completed')" ${!canComplete ? 'disabled title="Anime has not finished airing"' : ''}>✔ Completed</button>
