@@ -11,8 +11,9 @@
             --accent-color: #21E6C1;
             --text-light: #E8F9FD;
             --text-muted: #7FA9B5;
-            --my-list-color: #FFC107;
-            --watched-color: #4CAF50;
+            --completed-color: #4CAF50;
+            --watching-color: #FF9800;
+            --planned-color: #2196F3;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
@@ -25,7 +26,7 @@
             z-index: 1000; flex-wrap: wrap; gap: 1rem;
         }
 
-        .logo { font-size: 1.8rem; font-weight: bold; color: var(--accent-color); cursor: pointer; transition: all 0.3s ease; }
+        .logo { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: bold; color: var(--accent-color); cursor: pointer; transition: all 0.3s ease; }
         .logo:hover { transform: scale(1.05); text-shadow: 0 0 15px var(--accent-color); }
 
         .menu-toggle { display: none; font-size: 2rem; color: var(--accent-color); cursor: pointer; padding: 0 10px; font-weight: bold; }
@@ -44,7 +45,6 @@
         .section-title { margin-bottom: 1.5rem; color: var(--accent-color); border-left: 4px solid var(--accent-color); padding-left: 10px; text-transform: capitalize; }
         .hidden { display: none !important; }
 
-        /* HERO SECTION */
         .hero-picks { display: flex; gap: 2rem; height: 45vh; margin-bottom: 3rem; }
         .hero-card { flex: 1; border-radius: 10px; overflow: hidden; position: relative; cursor: pointer; transition: transform 0.3s; border: 1px solid var(--secondary-bg); display: flex; justify-content: center; align-items: center; background-color: #000; }
         .hero-card:hover { transform: scale(1.02); border-color: var(--accent-color); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
@@ -52,80 +52,78 @@
         .hero-poster { height: 95%; width: auto; max-width: 100%; object-fit: contain; z-index: 2; box-shadow: 0 0 20px rgba(0,0,0,0.8); border-radius: 8px; }
         .hero-info { position: absolute; bottom: 0; left: 0; padding: 2rem 1.5rem 1.5rem; background: linear-gradient(transparent, rgba(0,0,0,0.95)); width: 100%; z-index: 3; text-align: center; }
 
-        /* standard grid - wraps automatically, fits mobile well */
+        /* Standard Grid */
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.5rem; }
         
-        /* standard card */
-        .movie-card {
-            background-color: var(--secondary-bg); border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-align: center; padding-bottom: 10px; position: relative; display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            border: 1px solid transparent;
+        /* 5-Item Forced Layouts */
+        .movie-grid.pick-layout, .tracker-grid { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 1.5rem; 
+            max-width: 1200px; 
+            margin: 0 auto 2rem; 
         }
+
+        .movie-card { background-color: var(--secondary-bg); border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-align: center; padding-bottom: 10px; position: relative; display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid transparent;}
         .movie-card:hover { transform: translateY(-8px); border-color: var(--accent-color); box-shadow: 0 10px 15px rgba(0,0,0,0.6); }
         .movie-card img { width: 100%; height: 280px; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px; background-color: #000; }
         .movie-card h3 { font-size: 1rem; padding: 10px 10px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* rank badge for today's pick */
         .rank-badge { position: absolute; top: -10px; left: -10px; background: var(--accent-color); color: var(--primary-bg); font-weight: bold; width: 35px; height: 35px; display: flex; justify-content: center; align-items: center; border-radius: 50%; z-index: 5; font-size: 1.1rem; border: 2px solid var(--primary-bg); box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
-
-        /* MY LIST MODIFICATIONS FOR GRID CARDS */
-        .card-watched-overlay {
-            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 280px; 
-            background: rgba(4, 28, 35, 0.8); color: var(--watched-color);
-            z-index: 3; align-items: center; justify-content: center;
-            font-size: 1.5rem; font-weight: bold; border-top-left-radius: 8px; border-top-right-radius: 8px;
-        }
-        .movie-card.watched .card-watched-overlay { display: flex; }
-        .movie-card.watched h3 { color: var(--text-muted); }
-
-        .watched-btn {
-            display: none; margin: 10px 10px 0; padding: 8px;
-            background-color: transparent; border: 1px solid var(--accent-color);
-            color: var(--accent-color); border-radius: 4px; font-weight: bold; cursor: pointer;
-            transition: all 0.2s;
-        }
-        .watched-btn:hover { background-color: var(--accent-color); color: var(--primary-bg); }
-
         .loading-trigger { height: 60px; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-weight: bold; margin-top: 2rem; }
+
+        /* ================= TRACKER UI SPECIFICS ================= */
+        .tracker-section { margin-bottom: 3rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 10px;}
+        .tracker-section h2 { border-bottom: 2px solid; padding-bottom: 10px; margin-bottom: 20px;}
+        #sec-watching h2 { color: var(--watching-color); border-color: var(--watching-color); }
+        #sec-planned h2 { color: var(--planned-color); border-color: var(--planned-color); }
+        #sec-completed h2 { color: var(--completed-color); border-color: var(--completed-color); }
+        
+        .remove-btn { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.7); color: #ff4d4d; border-radius: 50%; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; cursor: pointer; z-index: 10; transition: 0.2s;}
+        .remove-btn:hover { background: #ff4d4d; color: white; transform: scale(1.1); }
+
+        .ep-controls { display: flex; justify-content: center; align-items: center; gap: 5px; margin-top: 10px; padding: 0 5px; }
+        .ep-btn { background: var(--primary-bg); color: var(--text-light); border: 1px solid var(--accent-color); border-radius: 4px; width: 30px; height: 30px; cursor: pointer; font-weight: bold; display: flex; justify-content: center; align-items: center; transition: 0.2s;}
+        .ep-btn:hover { background: var(--accent-color); color: var(--primary-bg); }
+        .ep-input { width: 45px; height: 30px; text-align: center; background: var(--primary-bg); color: var(--text-light); border: 1px solid var(--text-muted); border-radius: 4px; outline: none; font-weight: bold;}
+        .ep-total { color: var(--text-muted); font-size: 0.9rem; margin-left: 5px;}
+        .tracker-empty { grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 2rem; }
 
         /* MODAL */
         .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center; }
-        .modal-content { background-color: var(--primary-bg); border-radius: 10px; width: 95%; max-width: 1000px; max-height: 90vh; position: relative; border: 1px solid var(--accent-color); display: flex; flex-direction: column; overflow: hidden; max-width: 1000px; }
+        .modal-content { background-color: var(--primary-bg); border-radius: 10px; width: 95%; max-width: 1000px; max-height: 90vh; position: relative; border: 1px solid var(--accent-color); display: flex; flex-direction: column; overflow: hidden; }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: var(--accent-color); cursor: pointer; z-index: 100; transition: transform 0.2s; background: var(--primary-bg); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
         .close-btn:hover { transform: scale(1.2); }
+        .modal-body { display: flex; gap: 2rem; flex-wrap: wrap; padding: 2.5rem 2rem 2rem; overflow-y: auto; max-height: 90vh; flex-direction: row; }
         
-        .modal-body { 
-            display: flex; gap: 2rem; flex-wrap: wrap; padding: 2.5rem 2rem 2rem; 
-            overflow-y: auto; max-height: 90vh;
-            flex-direction: row; /* default desktop */
-        }
-        
-        .modal-poster-col { display: flex; flex-direction: column; gap: 1rem; width: 300px; }
+        .modal-poster-col { display: flex; flex-direction: column; gap: 10px; width: 300px; }
         .modal-poster { width: 100%; height: auto; max-height: 450px; object-fit: contain; border-radius: 8px; }
+
+        .action-buttons { display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: 10px;}
+        .action-btn { padding: 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: all 0.2s; color: white; opacity: 0.6; font-size: 1rem; }
+        .action-btn:hover:not(:disabled) { opacity: 1; transform: translateY(-2px); }
+        .action-btn.active { opacity: 1; border: 2px solid white; box-shadow: 0 0 15px rgba(255,255,255,0.4); }
+        .action-btn:disabled { background: #333 !important; color: #777; cursor: not-allowed; opacity: 0.5; }
         
-        .list-btn {
-            width: 100%; padding: 10px; border-radius: 5px; border: 2px solid var(--my-list-color);
-            background: transparent; color: var(--my-list-color); font-weight: bold;
-            cursor: pointer; transition: all 0.2s;
-        }
-        .list-btn:hover { background: var(--my-list-color); color: var(--primary-bg); }
-        .list-btn.on-list { background: #ff4d4d; border-color: #ff4d4d; color: white; }
-        .list-btn.on-list:hover { background: #cc0000; border-color: #cc0000; }
+        .btn-watching { background-color: var(--watching-color); }
+        .btn-planned { background-color: var(--planned-color); }
+        .btn-completed { background-color: var(--completed-color); }
 
         .modal-details { flex: 1; min-width: 250px; }
         .modal-details h2 { color: var(--accent-color); margin-bottom: 10px; font-size: 2rem; padding-right: 40px; }
         .modal-details p { margin-bottom: 8px; line-height: 1.6; color: var(--text-light); }
-        
         .read-more-btn { color: var(--accent-color); cursor: pointer; font-weight: bold; margin-left: 5px; }
         .read-more-btn:hover { text-decoration: underline; }
-
         .trailer-container { margin-top: 20px; width: 100%; aspect-ratio: 16 / 9; }
         .trailer-container iframe { width: 100%; height: 100%; border: none; border-radius: 8px; }
 
-        /* 📱 RESPONSIVE & BUG FIXES 📱 */
+        @media (max-width: 1000px) { 
+            .movie-grid.pick-layout, .tracker-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } 
+        }
+        
         @media (max-width: 768px) {
             .navbar { flex-direction: row; justify-content: space-between; align-items: center; padding: 1rem; }
             .menu-toggle { display: block; }
-            .logo { font-size: 1.5rem; }
             .search-container { order: 3; width: 100%; max-width: 100%; margin-top: 10px; }
             .nav-links { display: none; flex-direction: column; width: 100%; order: 4; background: var(--primary-bg); position: absolute; top: 100%; left: 0; padding: 1rem 0; border-bottom: 2px solid var(--accent-color); z-index: 1001; }
             .nav-links.show-nav { display: flex; }
@@ -134,16 +132,9 @@
             .hero-card { height: 350px; }
             .movie-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
             .movie-card img { height: 220px; }
-            .card-watched-overlay { height: 220px; font-size: 1.2rem;}
-
-            /* MODAL BUG FIX FOR MOBILE (Side information error) */
+            
             .modal-content { max-width: 95vw; }
-            .modal-body { 
-                flex-direction: column !important; /* Force stack vertically */
-                align-items: center; 
-                text-align: center; 
-                padding: 4rem 1rem 1rem !important; /* Space for close btn */
-            }
+            .modal-body { flex-direction: column !important; align-items: center; text-align: center; padding: 4rem 1rem 1rem !important; }
             .modal-poster-col { width: 100%; max-width: 250px; }
             .modal-details { width: 100%; min-width: 0; }
             .modal-details h2 { padding-right: 0; font-size: 1.6rem; }
@@ -154,15 +145,13 @@
 
     <nav class="navbar">
         <div class="logo" id="site-logo">Otaku Critique</div>
-        
         <div class="menu-toggle" id="mobile-menu-btn">⋮</div>
-        
         <ul class="nav-links" id="nav-list">
             <li data-category="home" class="active">Home</li>
             <li data-category="upcoming">Upcoming</li>
-            <li data-category="underrated">Underrated</li>
+            <li data-category="movies">Anime Movies</li>
             <li data-category="pick">Today's Pick</li>
-            <li data-category="mylist" style="color: var(--my-list-color); font-weight: bold;">My List</li>
+            <li data-category="mylist" style="color: #FFC107; font-weight: bold;">My List</li>
         </ul>
         <div class="search-container">
             <input type="text" id="search-box" placeholder="Search Anime... (e.g. Naruto)" autocomplete="off">
@@ -176,7 +165,24 @@
 
         <section class="dynamic-movies">
             <h2 class="section-title" id="grid-title">Loading...</h2>
+            
             <div class="movie-grid" id="main-grid"></div>
+            
+            <div id="my-list-container" class="hidden">
+                <div class="tracker-section" id="sec-watching">
+                    <h2>▶ Watching</h2>
+                    <div class="tracker-grid" id="grid-watching"></div>
+                </div>
+                <div class="tracker-section" id="sec-planned">
+                    <h2>🗓 Going to Watch</h2>
+                    <div class="tracker-grid" id="grid-planned"></div>
+                </div>
+                <div class="tracker-section" id="sec-completed">
+                    <h2>✔ Completed</h2>
+                    <div class="tracker-grid" id="grid-completed"></div>
+                </div>
+            </div>
+
             <div class="loading-trigger hidden" id="loading-trigger">Scrolling for more...</div>
         </section>
     </main>
@@ -191,9 +197,11 @@
     <script>
         const API_BASE = 'https://api.jikan.moe/v4';
 
-        // database logic
-        let otakuMyList = JSON.parse(localStorage.getItem('otakuMyList')) || {};
-        function saveList() { localStorage.setItem('otakuMyList', JSON.stringify(otakuMyList)); }
+        // ================= DATABASE =================
+        let otakuDatabase = JSON.parse(localStorage.getItem('otakuTracker')) || {};
+        let currentActiveAnime = null;
+
+        function saveDatabase() { localStorage.setItem('otakuTracker', JSON.stringify(otakuDatabase)); }
 
         const DOM = {
             logo: document.getElementById('site-logo'),
@@ -201,6 +209,7 @@
             navList: document.getElementById('nav-list'),
             searchBox: document.getElementById('search-box'),
             mainGrid: document.getElementById('main-grid'),
+            myListContainer: document.getElementById('my-list-container'),
             gridTitle: document.getElementById('grid-title'),
             heroContainer: document.getElementById('hero-container'),
             heroPicks: document.getElementById('hero-picks'),
@@ -243,18 +252,20 @@
                 const cat = e.target.getAttribute('data-category');
                 setActiveTab(cat);
                 
-                if (cat === 'mylist') loadMyList();
+                if (cat === 'mylist') loadMyListDashboard();
                 else loadCategory(cat, true);
                 
                 DOM.navList.classList.remove('show-nav'); 
             });
         });
 
-        // Search logic
         DOM.searchBox.addEventListener('keypress', async (e) => {
             if (e.key === 'Enter' && DOM.searchBox.value.trim()) {
                 DOM.heroContainer.classList.add('hidden');
                 setActiveTab('');
+                DOM.mainGrid.classList.remove('hidden');
+                DOM.myListContainer.classList.add('hidden');
+                
                 const query = DOM.searchBox.value.trim();
                 DOM.gridTitle.innerText = `Search Results: ${query}`;
                 currentCategory = 'search';
@@ -262,6 +273,7 @@
                 DOM.loadingTrigger.classList.add('hidden');
                 DOM.navList.classList.remove('show-nav');
                 DOM.mainGrid.innerHTML = '<h2>Loading...</h2>';
+                DOM.mainGrid.classList.remove('pick-layout');
                 
                 const res = await fetch(`${API_BASE}/anime?q=${encodeURIComponent(query)}&sfw=true`);
                 const data = await res.json();
@@ -270,17 +282,12 @@
             }
         });
 
-        // HERO SECTION LOGIC (Random masterpieces)
         async function loadHeroPicks() {
             try {
-                // Fetch top 25 masterpieces
                 const res = await fetch(`${API_BASE}/top/anime?limit=25`);
                 const data = await res.json();
-                // Filter broken ones
                 const valid = data.data.filter(a => a.images.jpg.large_image_url && a.trailer.embed_url);
-                // Shuffle array
                 valid.sort(() => 0.5 - Math.random());
-                // Pick top 2
                 const topTwo = valid.slice(0, 2);
                 
                 DOM.heroPicks.innerHTML = '';
@@ -299,6 +306,9 @@
             if(isFetching) return;
             isFetching = true;
 
+            DOM.mainGrid.classList.remove('hidden');
+            DOM.myListContainer.classList.add('hidden');
+
             if (isNewCategory) {
                 currentCategory = catKey;
                 currentPage = 1;
@@ -306,23 +316,24 @@
                 infiniteScrollEnabled = (catKey !== 'pick'); 
                 if (infiniteScrollEnabled) DOM.loadingTrigger.classList.remove('hidden');
                 else DOM.loadingTrigger.classList.add('hidden');
+
+                if (catKey === 'pick') DOM.mainGrid.classList.add('pick-layout');
+                else DOM.mainGrid.classList.remove('pick-layout');
             }
 
             let animes = [];
             let isRankedPick = false;
 
             try {
-                // HOME LOGIC: 50/50 mixture
                 if (catKey === 'home') {
                     DOM.gridTitle.innerText = "Masterpieces & Hidden Gems";
                     const [mastRes, gemRes] = await Promise.all([
-                        fetch(`${API_BASE}/top/anime?page=${currentPage}`), // Masterpieces (Top)
-                        fetch(`${API_BASE}/anime?order_by=score&sort=desc&page=${currentPage + 20}`) // Gems (Deep jump)
+                        fetch(`${API_BASE}/top/anime?page=${currentPage}`), 
+                        fetch(`${API_BASE}/anime?order_by=score&sort=desc&page=${currentPage + 20}`)
                     ]);
                     const mastData = await mastRes.json();
                     const gemData = await gemRes.json();
 
-                    // Interleave them
                     const maxLength = Math.max(mastData.data.length, gemData.data.length);
                     for(let i=0; i<maxLength; i++) {
                         if(mastData.data[i]) animes.push(mastData.data[i]);
@@ -330,10 +341,9 @@
                     }
                     if (!mastData.pagination.has_next_page) infiniteScrollEnabled = false;
                 } 
-                else if (catKey === 'underrated') {
-                    DOM.gridTitle.innerText = "Hidden Gems & Underrated Masterpieces";
-                    // Jump deep to find obscure high-scoring shows
-                    const res = await fetch(`${API_BASE}/anime?order_by=score&sort=desc&page=${currentPage + 20}`);
+                else if (catKey === 'movies') {
+                    DOM.gridTitle.innerText = "Top Rated Anime Movies";
+                    const res = await fetch(`${API_BASE}/anime?type=movie&order_by=popularity&sort=desc&page=${currentPage}`);
                     const data = await res.json();
                     animes = data.data;
                     if (!data.pagination.has_next_page) infiniteScrollEnabled = false;
@@ -347,19 +357,15 @@
                 } 
                 else if (catKey === 'pick') {
                     DOM.gridTitle.innerText = "Today's Top 10 Picks";
-                    // Fetch large batch to guarantee 10 valid ones
                     const res = await fetch(`${API_BASE}/top/anime?filter=favorite&limit=25`);
                     const data = await res.json();
-                    // Filter valid ones
                     let validAnimes = data.data.filter(a => a.images.jpg.large_image_url && a.trailer.embed_url);
-                    // The Wrapping Trick: Duplicate array so we don't run out when slicing deep
                     const dayOfMonth = new Date().getDate(); 
                     const startIdx = dayOfMonth % validAnimes.length; 
                     animes = validAnimes.concat(validAnimes).slice(startIdx, startIdx + 10);
                     isRankedPick = true;
                 }
 
-                // Filter broken ones
                 if (catKey !== 'pick') animes = animes.filter(a => a.images.jpg.large_image_url && a.trailer.embed_url);
                 renderGrid(animes, isRankedPick, isNewCategory);
                 
@@ -368,59 +374,9 @@
             } catch (error) { console.error(error);
             } finally {
                 isFetching = false;
-                // Auto-fill loop for large screens
                 if (infiniteScrollEnabled && isTriggerVisible()) {
                     setTimeout(() => { currentPage++; loadCategory(currentCategory, false); }, 500); 
                 }
-            }
-        }
-
-        // --- MY LIST LOGIC ---
-        function loadMyList() {
-            currentCategory = 'mylist';
-            infiniteScrollEnabled = false;
-            DOM.loadingTrigger.classList.add('hidden');
-            DOM.mainGrid.innerHTML = '';
-            DOM.gridTitle.innerText = "My Personal Anime List";
-            
-            // Convert storage object to array
-            const animes = Object.values(otakuMyList);
-            if(animes.length === 0) {
-                DOM.mainGrid.innerHTML = '<p style="text-align:center;color:var(--text-muted);width:100%;grid-column:1/-1;">Your list is empty. Add anime from details pop-up.</p>';
-                return;
-            }
-            // Sort by score (desc)
-            animes.sort((a,b) => b.score - a.score);
-            renderGrid(animes, false, true);
-        }
-
-        function toggleList(animeId) {
-            const btn = document.getElementById('modal-list-btn');
-            if(otakuMyList[animeId]) {
-                delete otakuMyList[animeId];
-                btn.innerText = "+ Add to My List";
-                btn.classList.remove('on-list');
-            } else {
-                // We need to fetch full data to save it properly
-                fetch(`${API_BASE}/anime/${animeId}`).then(r=>r.json()).then(data => {
-                    otakuMyList[animeId] = data.data;
-                    otakuMyList[animeId].otakuWatched = false; // Custom field
-                    saveList();
-                    btn.innerText = "× Remove from My List";
-                    btn.classList.add('on-list');
-                });
-                return; // Return early, save happens inside fetch then block
-            }
-            saveList();
-            if(currentCategory === 'mylist') loadMyList(); // Refresh list if viewing
-        }
-
-        function markWatched(animeId, e) {
-            e.stopPropagation(); // prevent card click (open modal)
-            if(otakuMyList[animeId]) {
-                otakuMyList[animeId].otakuWatched = true;
-                saveList();
-                loadMyList(); // refresh to show dimmed card
             }
         }
 
@@ -434,33 +390,12 @@
                 DOM.mainGrid.innerHTML = '<p style="width:100%;grid-column:1/-1;text-align:center;">No results found.</p>';
                 return;
             }
-
             animes.forEach((anime, index) => {
                 const card = document.createElement('div');
-                const watchedClass = anime.otakuWatched ? 'watched' : '';
-                card.className = `movie-card ${watchedClass}`;
+                card.className = 'movie-card';
                 card.onclick = () => openModal(anime); 
-                
-                const poster = anime.images.jpg.large_image_url;
-                const title = anime.title_english || anime.title;
                 let badgeHTML = isRankedPick ? `<div class="rank-badge">${index + 1}</div>` : '';
-
-                // My List specific button/overlay
-                let listHTML = '';
-                if(currentCategory === 'mylist') {
-                    if(anime.otakuWatched) {
-                        listHTML = '<div class="card-watched-overlay">WATCHED</div>';
-                    } else {
-                        listHTML = `<button class="watched-btn" onclick="markWatched(${anime.mal_id}, event)">Watched</button>`;
-                    }
-                }
-
-                card.innerHTML = `
-                    ${badgeHTML}
-                    ${listHTML}
-                    <img src="${poster}" alt="${title}" loading="lazy">
-                    <h3>${title}</h3>
-                `;
+                card.innerHTML = `${badgeHTML}<img src="${anime.images.jpg.large_image_url}" loading="lazy"><h3>${anime.title_english || anime.title}</h3>`;
                 DOM.mainGrid.appendChild(card);
             });
         }
@@ -474,6 +409,136 @@
             observer.observe(DOM.loadingTrigger);
         }
 
+        // ================= TRACKER DASHBOARD (MY LIST) =================
+        function loadMyListDashboard() {
+            currentCategory = 'mylist';
+            infiniteScrollEnabled = false;
+            DOM.loadingTrigger.classList.add('hidden');
+            DOM.mainGrid.classList.add('hidden');
+            DOM.myListContainer.classList.remove('hidden');
+            DOM.gridTitle.innerText = "My Personal Tracker";
+
+            const gridWatching = document.getElementById('grid-watching');
+            const gridPlanned = document.getElementById('grid-planned');
+            const gridCompleted = document.getElementById('grid-completed');
+
+            gridWatching.innerHTML = ''; gridPlanned.innerHTML = ''; gridCompleted.innerHTML = '';
+
+            Object.values(otakuDatabase).forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                
+                const title = item.title;
+                const total = item.totalEpisodes || '?';
+                const maxHtml = item.totalEpisodes ? `max="${item.totalEpisodes}"` : '';
+                
+                let controlsHTML = '';
+                // Only show episode controls if it is in Watching AND it is NOT a movie
+                if(item.status === 'watching' && item.type !== 'Movie') {
+                    controlsHTML = `
+                        <div class="ep-controls" onclick="event.stopPropagation()">
+                            <button class="ep-btn" onclick="changeEp(${item.id}, -1)">-</button>
+                            <input class="ep-input" type="number" value="${item.progress}" ${maxHtml} onchange="setEp(${item.id}, this.value)" min="1">
+                            <button class="ep-btn" onclick="changeEp(${item.id}, 1)">+</button>
+                            <span class="ep-total">/ ${total}</span>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <span class="remove-btn" onclick="event.stopPropagation(); removeFromList(${item.id})">×</span>
+                    <img src="${item.poster}" onclick="openFromDatabase(${item.id})">
+                    <h3 onclick="openFromDatabase(${item.id})">${title}</h3>
+                    ${controlsHTML}
+                `;
+
+                if(item.status === 'watching') gridWatching.appendChild(card);
+                else if(item.status === 'planned') gridPlanned.appendChild(card);
+                else if(item.status === 'completed') gridCompleted.appendChild(card);
+            });
+
+            if(!gridWatching.innerHTML) gridWatching.innerHTML = '<div class="tracker-empty">No anime added yet.</div>';
+            if(!gridPlanned.innerHTML) gridPlanned.innerHTML = '<div class="tracker-empty">No anime added yet.</div>';
+            if(!gridCompleted.innerHTML) gridCompleted.innerHTML = '<div class="tracker-empty">No anime added yet.</div>';
+        }
+
+        window.openFromDatabase = async function(id) {
+            try {
+                const res = await fetch(`${API_BASE}/anime/${id}`);
+                const data = await res.json();
+                openModal(data.data);
+            } catch(e) { alert("Failed to load details."); }
+        }
+
+        window.changeEp = function(id, delta) {
+            const entry = otakuDatabase[id];
+            if(!entry) return;
+            let newVal = parseInt(entry.progress) + delta;
+            updateEpData(id, newVal);
+        }
+
+        window.setEp = function(id, val) {
+            updateEpData(id, parseInt(val) || 1);
+        }
+
+        function updateEpData(id, val) {
+            const entry = otakuDatabase[id];
+            if(val < 1) val = 1; // Cannot drop below 1
+            
+            if(entry.totalEpisodes && val >= entry.totalEpisodes) {
+                val = entry.totalEpisodes;
+                entry.status = 'completed'; // Auto-move to completed
+            }
+            
+            entry.progress = val;
+            saveDatabase();
+            loadMyListDashboard(); // refresh grid live
+        }
+
+        window.removeFromList = function(id) {
+            delete otakuDatabase[id];
+            saveDatabase();
+            loadMyListDashboard();
+        }
+
+        function updateListStatus(status) {
+            const anime = currentActiveAnime;
+            if(!anime) return;
+            
+            // Validation: Cannot add Upcoming to Watching/Completed
+            const isUpcoming = (anime.status === 'Not yet aired' || anime.status === 'Upcoming');
+            if (isUpcoming && (status === 'watching' || status === 'completed')) {
+                return; // Guard rail
+            }
+
+            otakuDatabase[anime.mal_id] = {
+                id: anime.mal_id,
+                title: anime.title_english || anime.title,
+                poster: anime.images.jpg.large_image_url,
+                totalEpisodes: anime.episodes,
+                type: anime.type, // Store type to hide episodes for movies
+                status: status,
+                progress: otakuDatabase[anime.mal_id]?.progress || 1 // default to 1
+            };
+            
+            if(status === 'completed' && anime.episodes) otakuDatabase[anime.mal_id].progress = anime.episodes;
+
+            saveDatabase();
+            refreshModalButtons(anime.mal_id);
+            if(currentCategory === 'mylist') loadMyListDashboard();
+        }
+
+        function refreshModalButtons(id) {
+            const dbData = otakuDatabase[id];
+            const btnW = document.getElementById('btn-watching');
+            const btnP = document.getElementById('btn-planned');
+            const btnC = document.getElementById('btn-completed');
+            
+            if(btnW) btnW.className = `action-btn btn-watching ${dbData?.status === 'watching' ? 'active' : ''}`;
+            if(btnP) btnP.className = `action-btn btn-planned ${dbData?.status === 'planned' ? 'active' : ''}`;
+            if(btnC) btnC.className = `action-btn btn-completed ${dbData?.status === 'completed' ? 'active' : ''}`;
+        }
+
         window.toggleSynopsis = function(btn) {
             const contentSpan = btn.previousElementSibling;
             if (btn.innerText === 'Read More') { contentSpan.innerText = contentSpan.getAttribute('data-full'); btn.innerText = ' Show Less'; } 
@@ -481,15 +546,17 @@
         };
 
         function openModal(anime) {
-            // Check if full anime data exists (may need to fetch if opened from a shallow source)
             if(!anime.genres) {
                  fetch(`${API_BASE}/anime/${anime.mal_id}`).then(r=>r.json()).then(data => openModal(data.data));
                  return;
             }
 
+            currentActiveAnime = anime;
             const title = anime.title_english || anime.title;
             const genres = anime.genres ? anime.genres.map(g => g.name).join(', ') : 'N/A';
             const studios = anime.studios ? anime.studios.map(s => s.name).join(', ') : 'N/A';
+            const isUpcoming = (anime.status === 'Not yet aired' || anime.status === 'Upcoming');
+            const isMovie = (anime.type === 'Movie');
             
             const fullSynopsis = anime.synopsis || 'No synopsis available.';
             let shortSynopsis = fullSynopsis;
@@ -498,18 +565,28 @@
                 shortSynopsis = fullSynopsis.substring(0, 200) + '...';
                 readMoreHTML = `<span class="read-more-btn" onclick="toggleSynopsis(this)">Read More</span>`;
             }
-
             const safeSynopsis = fullSynopsis.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
-            // List button state
-            const isOnList = !!otakuMyList[anime.mal_id];
-            const btnText = isOnList ? "× Remove from My List" : "+ Add to My List";
-            const btnClass = isOnList ? "list-btn on-list" : "list-btn";
+            // Generate Action Buttons based on Movie / Upcoming conditions
+            let actionButtonsHTML = '';
+            if (isMovie) {
+                // Movie Constraint: Only show completed
+                actionButtonsHTML = `<button id="btn-completed" class="action-btn btn-completed" onclick="updateListStatus('completed')" ${isUpcoming ? 'disabled title="Not aired yet"' : ''}>✔ Completed</button>`;
+            } else {
+                // TV Constraint: Show all 3
+                actionButtonsHTML = `
+                    <button id="btn-completed" class="action-btn btn-completed" onclick="updateListStatus('completed')" ${isUpcoming ? 'disabled title="Not aired yet"' : ''}>✔ Completed</button>
+                    <button id="btn-watching" class="action-btn btn-watching" onclick="updateListStatus('watching')" ${isUpcoming ? 'disabled title="Not aired yet"' : ''}>▶ Watching</button>
+                    <button id="btn-planned" class="action-btn btn-planned" onclick="updateListStatus('planned')">🗓 Going to Watch</button>
+                `;
+            }
 
             DOM.modalBody.innerHTML = `
                 <div class="modal-poster-col">
                     <img src="${anime.images.jpg.large_image_url}" class="modal-poster">
-                    <button id="modal-list-btn" class="${btnClass}" onclick="toggleList(${anime.mal_id})">${btnText}</button>
+                    <div class="action-buttons">
+                        ${actionButtonsHTML}
+                    </div>
                 </div>
                 <div class="modal-details">
                     <h2>${title}</h2>
@@ -526,6 +603,8 @@
                     ${anime.trailer.embed_url ? `<div class="trailer-container"><iframe src="${anime.trailer.embed_url}" allowfullscreen></iframe></div>` : ''}
                 </div>
             `;
+            
+            refreshModalButtons(anime.mal_id);
             DOM.modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
             DOM.modalBody.scrollTop = 0; 
