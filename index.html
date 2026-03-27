@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Otaku Critique</title>
-    
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -48,13 +45,8 @@
 
     <aside class="hidden md:flex flex-col w-64 h-full border-r border-slate-800 bg-surface-900/50 backdrop-blur-xl z-50">
         <div class="p-6 flex items-center gap-3 cursor-pointer group" id="desktop-logo">
-            <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700 shadow-lg shadow-brand-500/10 group-hover:scale-110 transition-transform overflow-hidden">
-                <svg viewBox="0 0 100 100" class="w-full h-full p-1" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M50 5L95 25V75L50 95L5 75V25L50 5Z" fill="#8B5CF6" stroke="#7C3AED" stroke-width="3"/>
-                    <path d="M50 25L58 41L77 41L62 53L68 70L50 60L32 70L38 53L23 41L42 41L50 25Z" fill="#FBBF24" stroke="white" stroke-width="2"/>
-                    <path d="M48 45V55L55 50L48 45Z" fill="white"/>
-                    <path d="M75 15C75 15 72 20 68 22C64 24 60 25 56 26" stroke="white" stroke-width="3" stroke-linecap="round"/>
-                </svg>
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow-lg shadow-brand-500/30 group-hover:scale-110 transition-transform">
+                <i data-lucide="play" class="w-5 h-5 text-white"></i>
             </div>
             <h1 class="text-xl font-extrabold tracking-tighter text-white group-hover:text-brand-400 transition-colors">Otaku<span class="text-brand-500 group-hover:text-white">Critique</span></h1>
         </div>
@@ -85,14 +77,7 @@
                 
                 <div class="flex items-center gap-3 md:hidden">
                     <button id="mobile-menu-btn" class="p-2 text-brand-400 hover:text-white active:scale-95 transition-all"><i data-lucide="menu"></i></button>
-                    <h1 id="mobile-logo" class="text-xl font-extrabold tracking-tighter text-white cursor-pointer hover:text-brand-400 transition-colors flex items-center gap-2">
-                        <svg viewBox="0 0 100 100" class="w-6 h-6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M50 5L95 25V75L50 95L5 75V25L50 5Z" fill="#8B5CF6" stroke="#7C3AED" stroke-width="3"/>
-                            <path d="M50 25L58 41L77 41L62 53L68 70L50 60L32 70L38 53L23 41L42 41L50 25Z" fill="#FBBF24" stroke="white" stroke-width="2"/>
-                            <path d="M48 45V55L55 50L48 45Z" fill="white"/>
-                            <path d="M75 15C75 15 72 20 68 22C64 24 60 25 56 26" stroke="white" stroke-width="3" stroke-linecap="round"/>
-                        </svg> Otaku<span class="text-brand-500">Critique</span>
-                    </h1>
+                    <h1 id="mobile-logo" class="text-xl font-extrabold tracking-tighter text-white cursor-pointer hover:text-brand-400 transition-colors">Otaku<span class="text-brand-500">Critique</span></h1>
                 </div>
 
                 <div class="relative w-full max-w-md ml-auto">
@@ -113,13 +98,13 @@
             </nav>
         </header>
 
-        <div class="flex-1 overflow-y-auto p-4 md:p-8 space-y-10" id="scroll-container">
+        <div class="flex-1 overflow-y-auto p-4 md:p-8" id="scroll-container">
             
             <div id="hero-container">
                 <section class="hero-picks" id="hero-picks"></section>
             </div>
 
-            <h2 id="grid-title" class="text-2xl md:text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+            <h2 id="grid-title" class="text-2xl md:text-3xl font-extrabold tracking-tight text-white flex items-center gap-3 mb-6">
                 <span class="w-2 h-8 rounded-full bg-brand-500"></span> Discover
             </h2>
 
@@ -159,34 +144,34 @@
 
             <div id="modal-body-scroll" class="w-full h-full overflow-y-auto flex flex-col md:flex-row relative">
                 
-                <div class="w-full md:w-[320px] bg-slate-900/50 p-6 flex flex-col items-center border-b md:border-b-0 md:border-r border-slate-700/50 shrink-0 h-max">
+                <div class="w-full md:w-[320px] bg-slate-900/50 p-6 flex flex-col items-center border-b md:border-b-0 md:border-r border-slate-700/50 shrink-0">
                     <img id="modal-img" class="w-[60%] sm:w-[220px] md:w-full rounded-2xl shadow-2xl object-cover" src="">
                     <div id="modal-actions" class="w-full mt-6 flex flex-col gap-3 max-w-[220px] md:max-w-full"></div>
                 </div>
 
-                <div class="w-full md:flex-1 p-6 md:p-8 flex flex-col gap-6">
-                    <h2 id="modal-title" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight pr-8 mb-0"></h2>
+                <div class="w-full md:flex-1 p-6 md:p-8 flex flex-col">
+                    <h2 id="modal-title" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-6 pr-8"></h2>
                     
-                    <div class="bg-slate-900/40 p-5 rounded-2xl border border-slate-700/50 mb-0 space-y-3 text-sm sm:text-base">
-                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0 prose prose-invert">Score</span><span id="modal-score" class="text-brand-400 font-bold flex items-center gap-1"></span></div>
-                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0 prose prose-invert">Aired Date</span><span id="modal-date" class="text-white prose prose-invert"></span></div>
-                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0 prose prose-invert">Status</span><span id="modal-status" class="text-white prose prose-invert"></span></div>
-                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0 prose prose-invert">Type</span><span id="modal-type" class="text-white prose prose-invert"></span></div>
-                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0 prose prose-invert">Episodes</span><span id="modal-episodes" class="text-white prose prose-invert"></span></div>
-                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0 prose prose-invert">Studio</span><span id="modal-studio" class="text-white prose prose-invert"></span></div>
-                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0 prose prose-invert">Source</span><span id="modal-source" class="text-white prose prose-invert"></span></div>
-                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0 prose prose-invert">Genres</span><span id="modal-genres" class="text-white flex flex-wrap gap-1"></span></div>
+                    <div class="bg-slate-900/40 p-5 rounded-2xl border border-slate-700/50 mb-6 space-y-3 text-sm sm:text-base">
+                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0">Score</span><span id="modal-score" class="text-brand-400 font-bold flex items-center gap-1"></span></div>
+                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0">Aired</span><span id="modal-date" class="text-white"></span></div>
+                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0">Status</span><span id="modal-status" class="text-white"></span></div>
+                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0">Type</span><span id="modal-type" class="text-white"></span></div>
+                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0">Episodes</span><span id="modal-episodes" class="text-white"></span></div>
+                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0">Studio</span><span id="modal-studio" class="text-white"></span></div>
+                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0">Source</span><span id="modal-source" class="text-white"></span></div>
+                        <div class="flex"><span class="w-24 text-slate-500 font-semibold shrink-0">Genres</span><span id="modal-genres" class="text-white flex flex-wrap gap-1"></span></div>
                     </div>
                     
-                    <div class="mb-0">
-                        <h3 class="text-lg font-bold text-white mb-2 prose prose-invert">Synopsis</h3>
-                        <p class="text-slate-300 text-sm sm:text-base leading-relaxed prose prose-invert mb-0">
+                    <div class="mb-4">
+                        <h3 class="text-lg font-bold text-white mb-2">Synopsis</h3>
+                        <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
                             <span id="modal-synopsis"></span>
                             <button id="read-more-btn" class="hidden text-brand-400 font-bold ml-1 hover:underline outline-none" onclick="toggleSynopsis()"></button>
                         </p>
                     </div>
 
-                    <div id="modal-trailer" class="w-full aspect-video rounded-xl overflow-hidden bg-black mt-4 border border-slate-700/50 shadow-lg"></div>
+                    <div id="modal-trailer" class="w-full aspect-video shrink-0 rounded-xl overflow-hidden bg-black mt-4 border border-slate-700/50 shadow-lg"></div>
                 </div>
             </div>
         </div>
@@ -207,7 +192,6 @@
         let infiniteScrollEnabled = true;
         let searchDebounceTimer;
 
-        // BANNED & DUPLICATES
         function isBanned(anime) {
             return (anime.title_english || anime.title || '').toLowerCase().includes('steel ball run');
         }
@@ -232,18 +216,16 @@
             scrollContainer: document.getElementById('scroll-container')
         };
 
-        // --- INIT ---
         document.addEventListener('DOMContentLoaded', () => {
             loadCategory('home', true);
             setupIntersectionObserver();
-            // Preload logic
             setTimeout(() => {
                 fetch(`${API_BASE}/top/anime?filter=upcoming&page=1`);
                 fetch(`${API_BASE}/top/anime?filter=favorite&limit=25`);
             }, 2500);
         });
 
-        // --- NAVIGATION ---
+        // --- NAVIGATION FIX ---
         const goHome = () => {
             DOM.mobileNavMenu.classList.remove('show');
             DOM.searchBox.value = ''; DOM.searchSuggestions.classList.add('hidden');
@@ -316,7 +298,7 @@
                             const item = document.createElement('div');
                             item.className = 'suggestion-item hover:bg-slate-700/50 p-2 border-b border-slate-700 flex items-center gap-3 cursor-pointer';
                             item.innerHTML = `<img src="${anime.images.jpg.image_url}" class="w-10 h-12 object-cover rounded">
-                                              <span class="font-bold text-sm text-white prose prose-invert">${anime.title_english || anime.title}</span>`;
+                                              <span class="font-bold text-sm text-white">${anime.title_english || anime.title}</span>`;
                             item.onclick = () => { DOM.searchSuggestions.classList.add('hidden'); openModal(anime); };
                             DOM.searchSuggestions.appendChild(item);
                         });
@@ -332,13 +314,15 @@
                 const query = DOM.searchBox.value.trim();
                 DOM.searchSuggestions.classList.add('hidden');
                 DOM.mobileNavMenu.classList.remove('show');
-                highlightNav('');
+                
+                highlightNav(''); // Safely clears nav highlights
                 
                 DOM.heroContainer.classList.add('hidden'); 
                 DOM.myListContainer.classList.add('hidden');
                 DOM.mainGrid.classList.remove('hidden');
                 DOM.gridTitle.innerHTML = `<span class="w-2 h-8 rounded-full bg-brand-500"></span> Results for "${query}"`;
-                currentCategory = 'search'; infiniteScrollEnabled = false;
+                currentCategory = 'search';
+                infiniteScrollEnabled = false;
                 
                 DOM.loadingTrigger.classList.add('hidden');
                 DOM.mainGrid.innerHTML = '<div class="col-span-full flex justify-center py-10"><i data-lucide="loader-2" class="w-8 h-8 text-brand-500 animate-spin"></i></div>';
@@ -424,7 +408,7 @@
                         <img src="${anime.images.jpg.large_image_url}" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent opacity-80"></div>
                         <div class="absolute bottom-0 left-0 w-full p-4 flex flex-col justify-end">
-                            <h3 class="text-white font-bold leading-tight text-sm sm:text-base line-clamp-2 prose prose-invert">${anime.title_english || anime.title}</h3>
+                            <h3 class="text-white font-bold leading-tight text-sm sm:text-base line-clamp-2">${anime.title_english || anime.title}</h3>
                             <div class="flex items-center gap-2 mt-1 text-xs font-medium">
                                 <span class="flex items-center gap-1 text-brand-400"><i data-lucide="star" class="w-3 h-3"></i>${anime.score || 'N/A'}</span>
                             </div>
@@ -465,7 +449,7 @@
                     card.onclick = () => openFromDatabase(item.id);
                     card.innerHTML = `<button onclick="event.stopPropagation(); removeFromList(${item.id})" class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10"><i data-lucide="x" class="w-3 h-3"></i></button>
                         <img src="${item.poster}" class="w-16 h-24 object-cover rounded-xl shadow-md flex-shrink-0">
-                        <div class="flex-1 min-w-0"><h4 class="font-bold text-sm text-white truncate prose prose-invert">${item.title}</h4>${epControls}</div>`;
+                        <div class="flex-1 min-w-0"><h4 class="font-bold text-sm text-white truncate">${item.title}</h4>${epControls}</div>`;
                     container.appendChild(card);
                 });
             });
@@ -497,7 +481,6 @@
                 totalEpisodes: anime.episodes, type: anime.type, airingStatus: anime.status, status: status, progress: newProg
             };
             if(status === 'completed' && anime.episodes) otakuDatabase[anime.mal_id].progress = anime.episodes;
-            
             saveDatabase(); refreshModalButtons(); showToast(`Added to ${status}`);
             if(!DOM.myListContainer.classList.contains('hidden')) loadMyListDashboard();
         }
@@ -536,7 +519,6 @@
             document.getElementById('modal-img').src = anime.images.jpg.large_image_url;
             document.getElementById('modal-title').innerText = anime.title_english || anime.title;
             
-            // Structured Details
             document.getElementById('modal-score').innerHTML = `<i data-lucide="star" class="w-4 h-4"></i> ${anime.score || 'N/A'}`;
             document.getElementById('modal-status').innerText = anime.status || 'N/A';
             let releaseDate = "TBA";
@@ -548,7 +530,6 @@
             document.getElementById('modal-source').innerText = anime.source || 'N/A';
             document.getElementById('modal-genres').innerHTML = (anime.genres || []).map(g => `<span class="px-2 py-0.5 bg-slate-800 rounded border border-slate-700">${g.name}</span>`).join('');
             
-            // Synopsis Logic
             fullSynopsisText = anime.synopsis || "No synopsis available.";
             const btn = document.getElementById('read-more-btn');
             if(fullSynopsisText.length > 180) {
@@ -561,19 +542,19 @@
             }
             
             const tc = document.getElementById('modal-trailer');
-            tc.innerHTML = anime.trailer.embed_url ? `<iframe src="${anime.trailer.embed_url}" allowfullscreen class="w-full h-full"></iframe>` : '<div class="w-full h-full flex items-center justify-center text-slate-500 prose prose-invert">No trailer available</div>';
+            tc.innerHTML = anime.trailer.embed_url ? `<iframe src="${anime.trailer.embed_url}" allowfullscreen class="w-full h-full"></iframe>` : '<div class="w-full h-full flex items-center justify-center text-slate-500">No trailer available</div>';
 
             const acts = document.getElementById('modal-actions');
             if(anime.type === 'Movie' || anime.episodes === 1) {
                 acts.innerHTML = `
-                    <button id="btn-completed" class="w-full py-3 rounded-xl font-bold bg-green-600 hover:bg-green-500 text-white transition-all active:scale-95 disabled:opacity-30 prose prose-invert" onclick="updateListStatus('completed')" ${anime.status !== 'Finished Airing' ? 'disabled' : ''}>✔ Completed</button>
-                    <button id="btn-planned" class="w-full py-3 rounded-xl font-bold bg-blue-600 hover:bg-blue-500 text-white transition-all active:scale-95 prose prose-invert" onclick="updateListStatus('planned')">🗓 Going to Watch</button>
+                    <button id="btn-completed" class="w-full py-3 rounded-xl font-bold bg-green-600 hover:bg-green-500 text-white transition-all active:scale-95 disabled:opacity-30" onclick="updateListStatus('completed')" ${anime.status !== 'Finished Airing' ? 'disabled' : ''}>✔ Completed</button>
+                    <button id="btn-planned" class="w-full py-3 rounded-xl font-bold bg-blue-600 hover:bg-blue-500 text-white transition-all active:scale-95" onclick="updateListStatus('planned')">🗓 Going to Watch</button>
                 `;
             } else {
                 acts.innerHTML = `
-                    <button id="btn-completed" class="w-full py-3 rounded-xl font-bold bg-green-600 hover:bg-green-500 text-white transition-all active:scale-95 disabled:opacity-30 prose prose-invert" onclick="updateListStatus('completed')" ${anime.status !== 'Finished Airing' ? 'disabled' : ''}>✔ Completed</button>
-                    <button id="btn-watching" class="w-full py-3 rounded-xl font-bold bg-orange-600 hover:bg-orange-500 text-white transition-all active:scale-95 disabled:opacity-30 prose prose-invert" onclick="updateListStatus('watching')" ${(anime.status === 'Not yet aired' || anime.status === 'Upcoming') ? 'disabled' : ''}>▶ Watching</button>
-                    <button id="btn-planned" class="w-full py-3 rounded-xl font-bold bg-blue-600 hover:bg-blue-500 text-white transition-all active:scale-95 prose prose-invert" onclick="updateListStatus('planned')">🗓 Going to Watch</button>
+                    <button id="btn-completed" class="w-full py-3 rounded-xl font-bold bg-green-600 hover:bg-green-500 text-white transition-all active:scale-95 disabled:opacity-30" onclick="updateListStatus('completed')" ${anime.status !== 'Finished Airing' ? 'disabled' : ''}>✔ Completed</button>
+                    <button id="btn-watching" class="w-full py-3 rounded-xl font-bold bg-orange-600 hover:bg-orange-500 text-white transition-all active:scale-95 disabled:opacity-30" onclick="updateListStatus('watching')" ${(anime.status === 'Not yet aired' || anime.status === 'Upcoming') ? 'disabled' : ''}>▶ Watching</button>
+                    <button id="btn-planned" class="w-full py-3 rounded-xl font-bold bg-blue-600 hover:bg-blue-500 text-white transition-all active:scale-95" onclick="updateListStatus('planned')">🗓 Going to Watch</button>
                 `;
             }
 
