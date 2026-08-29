@@ -7,6 +7,7 @@
 <meta name="description" content="A fictionalized memoir-style novel about money, family, failure and work. Instant eBook delivery to your inbox.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -45,15 +46,6 @@
   h1,h2,h3, .serif{ font-family:'Lora',Georgia,serif; }
 
   .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 28px; }
-
-  .eyebrow{
-    font-size:12px;
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    color:var(--brass);
-    font-weight:600;
-    margin:0 0 18px;
-  }
 
   .ornament{
     display:flex; align-items:center; justify-content:center; gap:12px;
@@ -99,12 +91,6 @@
     margin:0 0 20px;
     max-width:46ch;
   }
-  .hero p.desc{
-    color:var(--ink-soft);
-    font-size:15.5px;
-    max-width:48ch;
-    margin:0 0 34px;
-  }
   .btn{
     display:inline-flex; align-items:center; gap:10px;
     background:var(--ink); color:var(--paper);
@@ -122,10 +108,6 @@
     background:transparent; color:var(--ink); border:1px solid var(--ink);
   }
   .btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; box-shadow:none; }
-
-  .hero .cta-note{
-    margin-top:14px; font-size:12.5px; color:var(--ink-faint); letter-spacing:.02em;
-  }
 
   .book-stage{
     display:flex; justify-content:center; perspective:1400px;
@@ -160,36 +142,33 @@
   .divider{ padding:8px 0 0; }
 
   /* ---------- inside book ---------- */
-  .inside{ background:var(--paper-dim); border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); }
+  .inside{ background:var(--paper-dim); border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding-top:100px; }
   .chapters{
     max-width:640px; margin:0 auto;
     border-top:1px solid var(--rule);
   }
-  .chapter-row{
+  .chapter-row{ border-bottom:1px solid var(--rule); }
+  .chapter-row summary{
     display:flex; align-items:baseline; gap:20px;
-    padding:16px 4px;
-    border-bottom:1px solid var(--rule);
+    padding:16px 4px; cursor:pointer; list-style:none;
+    -webkit-tap-highlight-color:transparent;
   }
+  .chapter-row summary::-webkit-details-marker{ display:none; }
+  .chapter-row summary::marker{ content:''; }
   .chapter-row .num{
     font-family:'Lora',serif; font-style:italic; color:var(--brass);
     font-size:15px; width:28px; flex:none;
   }
-  .chapter-row .title{ font-size:15.5px; }
-
-  /* ---------- delivery notes ---------- */
-  .notes{ padding:20px 0 76px; }
-  .notes-grid{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:28px;
-    max-width:960px; margin:0 auto;
+  .chapter-row .title{ font-size:15.5px; flex:1; }
+  .chapter-row .chev{
+    color:var(--ink-faint); font-size:13px; flex:none;
+    transition:transform .2s ease;
   }
-  .note-card{
-    border:1px solid var(--rule); border-radius:var(--radius);
-    padding:26px 24px; background:var(--paper);
+  .chapter-row[open] .chev{ transform:rotate(180deg); }
+  .chapter-teaser{
+    margin:0 0 18px 48px; padding-right:24px;
+    font-size:14px; color:var(--ink-soft); line-height:1.6;
   }
-  .note-card .k{
-    font-family:'Lora',serif; font-weight:600; font-size:17px; margin:0 0 8px;
-  }
-  .note-card .v{ color:var(--ink-soft); font-size:14.5px; margin:0; }
 
   /* ---------- order ---------- */
   .order{ background:var(--paper-dim); border-top:1px solid var(--rule); }
@@ -201,16 +180,19 @@
     padding:38px 34px 32px;
     box-shadow:var(--shadow-lg);
   }
-  .price-row{ text-align:center; margin-bottom:26px; }
+  .price-row{ text-align:center; margin-bottom:32px; }
+  .price-row .price-line{
+    display:flex; align-items:baseline; justify-content:center; gap:12px;
+  }
   .price-row .strike{
     color:var(--ink-faint); text-decoration:line-through;
-    font-size:16px; margin-right:10px;
+    font-size:17px;
   }
   .price-row .now{
-    font-family:'Lora',serif; font-weight:700; font-size:36px;
+    font-family:'Lora',serif; font-weight:700; font-size:40px; letter-spacing:-0.01em;
   }
   .price-row .cap{
-    display:block; margin-top:6px; font-size:12.5px; color:var(--ink-faint); letter-spacing:.02em;
+    display:block; margin-top:10px; font-size:12.5px; color:var(--ink-faint); letter-spacing:.02em;
   }
 
   .field{ margin-bottom:18px; }
@@ -260,7 +242,6 @@
   .modal-backdrop.show .modal{ transform:translateY(0) scale(1); opacity:1; }
 
   .modal h3{ font-size:22px; margin:0 0 4px; }
-  .modal .step-sub{ color:var(--ink-soft); font-size:13.5px; margin:0 0 22px; }
 
   .recap{
     border:1px solid var(--rule); border-radius:var(--radius);
@@ -268,22 +249,13 @@
   }
   .recap .line{ display:flex; justify-content:space-between; padding:4px 0; }
   .recap .line span:first-child{ color:var(--ink-soft); }
-  .recap .total{ border-top:1px solid var(--rule); margin-top:8px; padding-top:10px; font-weight:600; font-family:'Lora',serif; font-size:17px; }
 
   .qr-box{
     display:flex; flex-direction:column; align-items:center; gap:10px;
     padding:20px 0 6px;
   }
   #qrcode{ padding:10px; background:#fff; border:1px solid var(--rule); border-radius:4px; }
-  .upi-id{
-    font-family:'Inter',monospace; font-size:14px; background:var(--brass-soft);
-    padding:8px 14px; border-radius:20px; display:inline-flex; align-items:center; gap:10px;
-  }
-  .upi-id button{
-    border:none; background:none; color:var(--brass); font-weight:600; font-size:12px;
-    cursor:pointer; letter-spacing:.02em;
-  }
-  .qr-caption{ font-size:12.5px; color:var(--ink-faint); }
+  .upi-app-btn{ display:none; margin-top:14px; }
 
   .stack{ display:flex; flex-direction:column; gap:12px; margin-top:22px; }
   .link-btn{
@@ -334,9 +306,16 @@
     .hero{ padding:52px 0 60px; }
     .book-stage{ order:-1; }
     .book-mockup{ width:min(240px, 60vw); }
-    .notes-grid{ grid-template-columns:1fr; }
     .order-card{ padding:30px 22px 26px; }
     section{ padding:52px 0; }
+    .inside{ padding-top:64px; }
+  }
+  @media (max-width: 680px){
+    .upi-app-btn{ display:inline-flex; }
+  }
+  @media (max-width: 480px){
+    .hero .sub{ font-size:17px; }
+    .modal{ padding:26px 20px 22px; }
   }
 </style>
 </head>
@@ -353,18 +332,15 @@
   <header class="hero">
     <div class="wrap">
       <div>
-        <p class="eyebrow fade-up" style="animation-delay:.05s">A real story. Real lessons. Real life.</p>
-        <h1 class="fade-up" style="animation-delay:.15s">Business Planning<br>for 18+</h1>
-        <p class="sub fade-up" style="animation-delay:.25s">A story about money, family, failure, work — and the life between.</p>
-        <p class="desc fade-up" style="animation-delay:.32s">A fictionalized memoir-style novel for young adults, and for anyone who has ever believed money would solve everything.</p>
-        <div class="fade-up" style="animation-delay:.4s">
+        <h1 class="fade-up" style="animation-delay:.05s">Business Planning<br>for 18+</h1>
+        <p class="sub fade-up" style="animation-delay:.15s">A story about money, family, failure, work — and the life between.</p>
+        <div class="fade-up" style="animation-delay:.25s">
           <a href="#order" class="btn">Get the eBook — ₹299</a>
-          <p class="cta-note">Instant digital delivery · Sent straight to your inbox</p>
         </div>
       </div>
-      <div class="book-stage fade-up" style="animation-delay:.2s">
+      <div class="book-stage fade-up" style="animation-delay:.15s">
         <div class="book-mockup">
-          <img src="cover.png" alt="Business Planning for 18+ — book cover">
+          <img src="cover.png" alt="Business Planning for 18+ — book cover" onerror="this.closest('.book-stage').style.display='none'">
         </div>
       </div>
     </div>
@@ -376,35 +352,24 @@
       <div class="section-head">
         <div class="ornament"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
         <h2>Inside the book</h2>
-        <p>Fifteen chapters move through the dream that started it all, the delivery days, the investment fever, and the quiet arithmetic of building a business alongside a family. Less a how-to — more a record of what business planning actually costs, and what it gives back.</p>
+        <p>Fifteen chapters, start to finish. Tap any of them for a line on what's inside.</p>
       </div>
       <div class="chapters">
-        <div class="chapter-row"><span class="num">01</span><span class="title">The Swat Dream</span></div>
-        <div class="chapter-row"><span class="num">02</span><span class="title">The Dark Sunrise</span></div>
-        <div class="chapter-row"><span class="num">03</span><span class="title">The Long Sunshine</span></div>
-        <div class="chapter-row"><span class="num">06</span><span class="title">The Delivery Days</span></div>
-        <div class="chapter-row"><span class="num">07</span><span class="title">The Investment Fever</span></div>
-        <div class="chapter-row"><span class="num">15</span><span class="title">The Rule Before Going Home</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= DELIVERY NOTES ================= -->
-  <section class="notes">
-    <div class="wrap">
-      <div class="notes-grid">
-        <div class="note-card">
-          <p class="k">Digital only</p>
-          <p class="v">This is an eBook (PDF). We don't print or ship a physical copy.</p>
-        </div>
-        <div class="note-card">
-          <p class="k">Sent to your email</p>
-          <p class="v">Your copy is delivered to the email address you enter below — please enter it carefully.</p>
-        </div>
-        <div class="note-card">
-          <p class="k">After payment</p>
-          <p class="v">You'll receive it from buisness65201@gmail.com once your payment is verified.</p>
-        </div>
+        <details class="chapter-row"><summary><span class="num">01</span><span class="title">The Swat Dream</span><span class="chev">⌄</span></summary><p class="chapter-teaser">A boy discovers that wanting things and understanding money are not the same thing.</p></details>
+        <details class="chapter-row"><summary><span class="num">02</span><span class="title">The Dark Sunrise</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Turning eighteen doesn't hand you an answer — it just changes the questions.</p></details>
+        <details class="chapter-row"><summary><span class="num">03</span><span class="title">The Long Sunshine</span><span class="chev">⌄</span></summary><p class="chapter-teaser">The unglamorous years of ordinary work quietly become the foundation.</p></details>
+        <details class="chapter-row"><summary><span class="num">04</span><span class="title">The Wrong Turn</span><span class="chev">⌄</span></summary><p class="chapter-teaser">A search for relief turns into a shortcut dressed up as a solution.</p></details>
+        <details class="chapter-row"><summary><span class="num">05</span><span class="title">The Rehabilitation</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Not one big decision, but a slow, structured return to honesty.</p></details>
+        <details class="chapter-row"><summary><span class="num">06</span><span class="title">The Delivery Days</span><span class="chev">⌄</span></summary><p class="chapter-teaser">A simple delivery job teaches a lesson no résumé could.</p></details>
+        <details class="chapter-row"><summary><span class="num">07</span><span class="title">The Investment Fever</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Some savings and too much confidence make a familiar, costly combination.</p></details>
+        <details class="chapter-row"><summary><span class="num">08</span><span class="title">The Candle on the Table</span><span class="chev">⌄</span></summary><p class="chapter-teaser">The first product made by hand is clumsy, uneven — and the start of everything.</p></details>
+        <details class="chapter-row"><summary><span class="num">09</span><span class="title">The First Batch</span><span class="chev">⌄</span></summary><p class="chapter-teaser">A tiny order feels enormous when it's the first one that matters.</p></details>
+        <details class="chapter-row"><summary><span class="num">10</span><span class="title">The Marriage Equation</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Sharing a life means learning to share uncertainty, not just a home.</p></details>
+        <details class="chapter-row"><summary><span class="num">11</span><span class="title">The People Behind the Numbers</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Asking successful people about their failures, not their wins.</p></details>
+        <details class="chapter-row"><summary><span class="num">12</span><span class="title">The Bachelor Meetings</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Hundreds of conversations with young men chasing the same dream.</p></details>
+        <details class="chapter-row"><summary><span class="num">13</span><span class="title">The Week the Business Nearly Broke</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Real trouble doesn't arrive when you're struggling — it arrives when you finally feel safe.</p></details>
+        <details class="chapter-row"><summary><span class="num">14</span><span class="title">The Son Arrives</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Becoming a father changes what money means, all over again.</p></details>
+        <details class="chapter-row"><summary><span class="num">15</span><span class="title">The Rule Before Going Home</span><span class="chev">⌄</span></summary><p class="chapter-teaser">What a father's quiet strength leaves behind.</p></details>
       </div>
     </div>
   </section>
@@ -414,7 +379,10 @@
     <div class="wrap">
       <div class="order-card">
         <div class="price-row">
-          <span class="strike">₹599</span><span class="now">₹299</span>
+          <div class="price-line">
+            <span class="strike">₹599</span>
+            <span class="now">₹299</span>
+          </div>
           <span class="cap">One-time payment · Instant email delivery</span>
         </div>
 
@@ -452,30 +420,21 @@
   <div class="modal-backdrop" id="backdrop">
 
     <!-- Step 1: Payment -->
-    <div class="modal" id="paymentStep" role="dialog" aria-modal="true" aria-labelledby="payTitle">
-      <h3 id="payTitle">Complete your payment</h3>
-      <p class="step-sub">Scan, pay, then confirm below.</p>
-
+    <div class="modal" id="paymentStep" role="dialog" aria-modal="true" aria-label="Complete your payment">
       <div class="recap">
         <div class="line"><span>Item</span><span>Business Planning for 18+</span></div>
         <div class="line"><span>For</span><span id="recapName">—</span></div>
-        <div class="line total"><span class="strike" style="margin:0;">₹599</span><span>→</span><span>₹299</span></div>
       </div>
 
       <div class="qr-box">
         <div id="qrcode"></div>
-        <p class="qr-caption">Scan with any UPI app</p>
-        <div class="upi-id">
-          <span id="upiIdText">8102738799@sbi</span>
-          <button type="button" id="copyUpi">Copy</button>
-        </div>
-        <a href="#" id="upiAppLink" class="btn ghost" style="margin-top:6px;">Pay with UPI App</a>
+        <a href="#" id="upiAppLink" class="btn ghost upi-app-btn">Pay with UPI App</a>
       </div>
 
       <div class="divider ornament"><span class="line"></span><span class="dot"></span><span class="line"></span></div>
 
       <div class="stack">
-        <button type="button" class="btn block" id="confirmPaymentBtn">I've Completed the Payment</button>
+        <button type="button" class="btn block" id="confirmPaymentBtn">Verify Payment</button>
         <button type="button" class="link-btn" id="backBtn">← Back</button>
       </div>
     </div>
@@ -486,11 +445,11 @@
         <circle cx="32" cy="32" r="27"></circle>
         <path d="M20 33 L28 41 L45 23"></path>
       </svg>
-      <h3 id="successTitle">Payment confirmed</h3>
-      <p>Your copy of <em>Business Planning for 18+</em> will be sent to <span class="email-hi" id="successEmail">—</span>. We don't send a physical book — everything arrives digitally, straight to that inbox.</p>
+      <h3 id="successTitle">Payment under verification</h3>
+      <p>Thanks — your payment is now being verified. Once confirmed, we'll send the <em>Business Planning for 18+</em> PDF to <span class="email-hi" id="successEmail">—</span>.</p>
 
       <div class="verify-note">
-        After we verify your payment, you'll get an email from <b>buisness65201@gmail.com</b>. This can take a little time — please check your <b>Inbox</b> and your <b>Spam / Junk folder</b> too.
+        This usually takes <b>24–72 hours</b>. After some time, please check your <b>Inbox</b> and your <b>Spam / Junk folder</b> too.
       </div>
 
       <button type="button" class="btn block" id="doneBtn">Done</button>
@@ -566,7 +525,6 @@
     };
 
     document.getElementById('recapName').textContent = currentEntry.name;
-    document.getElementById('upiIdText').textContent = CONFIG.upiId;
     document.getElementById('upiAppLink').href = buildUpiLink();
 
     if(!qrRendered){
@@ -585,11 +543,12 @@
     openModal();
   });
 
-  document.getElementById('copyUpi').addEventListener('click', function(){
-    navigator.clipboard.writeText(CONFIG.upiId).then(() => {
-      this.textContent = 'Copied';
-      setTimeout(() => this.textContent = 'Copy', 1500);
-    });
+  document.getElementById('upiAppLink').addEventListener('click', function(e){
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia('(max-width:680px)').matches;
+    if(!isMobile){
+      e.preventDefault();
+      alert("This option isn't available on this device — please scan the QR code instead.");
+    }
   });
 
   document.getElementById('backBtn').addEventListener('click', closeModal);
@@ -613,7 +572,7 @@
 
   confirmBtn.addEventListener('click', async function(){
     confirmBtn.disabled = true;
-    confirmBtn.innerHTML = '<span class="spinner"></span> Confirming…';
+    confirmBtn.innerHTML = '<span class="spinner"></span> Verifying…';
 
     await logToSheet(currentEntry);
 
@@ -622,7 +581,7 @@
     successStep.style.display = '';
 
     confirmBtn.disabled = false;
-    confirmBtn.innerHTML = "I've Completed the Payment";
+    confirmBtn.innerHTML = "Verify Payment";
   });
 
   document.getElementById('doneBtn').addEventListener('click', function(){
