@@ -110,23 +110,21 @@
   .btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; box-shadow:none; }
 
   .book-stage{
-    display:flex; justify-content:center; perspective:1400px;
+    display:flex; justify-content:center;
   }
   .book-mockup{
     width:min(320px, 78vw);
     animation:float 6s ease-in-out infinite;
   }
   @keyframes float{
-    0%,100%{ transform:translateY(0) rotateY(-8deg) rotateX(2deg); }
-    50%{ transform:translateY(-10px) rotateY(-8deg) rotateX(2deg); }
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-10px); }
   }
   .book-mockup img{
     display:block; width:100%; height:auto;
     border:1px solid var(--rule);
-    box-shadow:
-      -7px 7px 0 -1px var(--paper), -7px 7px 0 0 var(--rule),
-      -14px 14px 0 -1px var(--paper), -14px 14px 0 0 var(--rule),
-      var(--shadow-lg);
+    border-radius:4px;
+    box-shadow:var(--shadow-lg);
   }
 
   /* fade-up on load */
@@ -148,23 +146,28 @@
     border-top:1px solid var(--rule);
   }
   .chapter-row{ border-bottom:1px solid var(--rule); }
-  .chapter-row summary{
-    display:flex; align-items:baseline; gap:20px;
-    padding:16px 4px; cursor:pointer; list-style:none;
+  .chapter-head{
+    width:100%; display:flex; align-items:baseline; gap:20px;
+    padding:16px 4px; cursor:pointer; background:none; border:none;
+    font:inherit; color:inherit; text-align:left;
     -webkit-tap-highlight-color:transparent;
   }
-  .chapter-row summary::-webkit-details-marker{ display:none; }
-  .chapter-row summary::marker{ content:''; }
-  .chapter-row .num{
+  .chapter-head .num{
     font-family:'Lora',serif; font-style:italic; color:var(--brass);
     font-size:15px; width:28px; flex:none;
   }
-  .chapter-row .title{ font-size:15.5px; flex:1; }
-  .chapter-row .chev{
+  .chapter-head .title{ font-size:15.5px; flex:1; }
+  .chapter-head .chev{
     color:var(--ink-faint); font-size:13px; flex:none;
-    transition:transform .2s ease;
+    transition:transform .25s ease;
   }
-  .chapter-row[open] .chev{ transform:rotate(180deg); }
+  .chapter-row.open .chev{ transform:rotate(180deg); }
+  .chapter-body{
+    max-height:0; overflow:hidden; opacity:0;
+    transform:translateY(10px);
+    transition:max-height .35s ease, opacity .3s ease, transform .3s ease;
+  }
+  .chapter-row.open .chapter-body{ opacity:1; transform:translateY(0); }
   .chapter-teaser{
     margin:0 0 18px 48px; padding-right:24px;
     font-size:14px; color:var(--ink-soft); line-height:1.6;
@@ -180,19 +183,9 @@
     padding:38px 34px 32px;
     box-shadow:var(--shadow-lg);
   }
-  .price-row{ text-align:center; margin-bottom:32px; }
-  .price-row .price-line{
-    display:flex; align-items:baseline; justify-content:center; gap:12px;
-  }
-  .price-row .strike{
-    color:var(--ink-faint); text-decoration:line-through;
-    font-size:17px;
-  }
-  .price-row .now{
-    font-family:'Lora',serif; font-weight:700; font-size:40px; letter-spacing:-0.01em;
-  }
-  .price-row .cap{
-    display:block; margin-top:10px; font-size:12.5px; color:var(--ink-faint); letter-spacing:.02em;
+  .order-heading{
+    font-family:'Lora',serif; font-weight:600; font-size:21px;
+    text-align:center; margin:0 0 26px;
   }
 
   .field{ margin-bottom:18px; }
@@ -258,10 +251,6 @@
   .upi-app-btn{ display:none; margin-top:14px; }
 
   .stack{ display:flex; flex-direction:column; gap:12px; margin-top:22px; }
-  .link-btn{
-    background:none; border:none; color:var(--ink-soft); font-size:13.5px;
-    text-decoration:underline; cursor:pointer; padding:6px; align-self:center;
-  }
 
   /* success */
   .success-icon{
@@ -312,6 +301,7 @@
   }
   @media (max-width: 680px){
     .upi-app-btn{ display:inline-flex; }
+    .book-stage{ display:none; }
   }
   @media (max-width: 480px){
     .hero .sub{ font-size:17px; }
@@ -355,21 +345,21 @@
         <p>Fifteen chapters, start to finish. Tap any of them for a line on what's inside.</p>
       </div>
       <div class="chapters">
-        <details class="chapter-row"><summary><span class="num">01</span><span class="title">The Swat Dream</span><span class="chev">⌄</span></summary><p class="chapter-teaser">A boy discovers that wanting things and understanding money are not the same thing.</p></details>
-        <details class="chapter-row"><summary><span class="num">02</span><span class="title">The Dark Sunrise</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Turning eighteen doesn't hand you an answer — it just changes the questions.</p></details>
-        <details class="chapter-row"><summary><span class="num">03</span><span class="title">The Long Sunshine</span><span class="chev">⌄</span></summary><p class="chapter-teaser">The unglamorous years of ordinary work quietly become the foundation.</p></details>
-        <details class="chapter-row"><summary><span class="num">04</span><span class="title">The Wrong Turn</span><span class="chev">⌄</span></summary><p class="chapter-teaser">A search for relief turns into a shortcut dressed up as a solution.</p></details>
-        <details class="chapter-row"><summary><span class="num">05</span><span class="title">The Rehabilitation</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Not one big decision, but a slow, structured return to honesty.</p></details>
-        <details class="chapter-row"><summary><span class="num">06</span><span class="title">The Delivery Days</span><span class="chev">⌄</span></summary><p class="chapter-teaser">A simple delivery job teaches a lesson no résumé could.</p></details>
-        <details class="chapter-row"><summary><span class="num">07</span><span class="title">The Investment Fever</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Some savings and too much confidence make a familiar, costly combination.</p></details>
-        <details class="chapter-row"><summary><span class="num">08</span><span class="title">The Candle on the Table</span><span class="chev">⌄</span></summary><p class="chapter-teaser">The first product made by hand is clumsy, uneven — and the start of everything.</p></details>
-        <details class="chapter-row"><summary><span class="num">09</span><span class="title">The First Batch</span><span class="chev">⌄</span></summary><p class="chapter-teaser">A tiny order feels enormous when it's the first one that matters.</p></details>
-        <details class="chapter-row"><summary><span class="num">10</span><span class="title">The Marriage Equation</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Sharing a life means learning to share uncertainty, not just a home.</p></details>
-        <details class="chapter-row"><summary><span class="num">11</span><span class="title">The People Behind the Numbers</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Asking successful people about their failures, not their wins.</p></details>
-        <details class="chapter-row"><summary><span class="num">12</span><span class="title">The Bachelor Meetings</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Hundreds of conversations with young men chasing the same dream.</p></details>
-        <details class="chapter-row"><summary><span class="num">13</span><span class="title">The Week the Business Nearly Broke</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Real trouble doesn't arrive when you're struggling — it arrives when you finally feel safe.</p></details>
-        <details class="chapter-row"><summary><span class="num">14</span><span class="title">The Son Arrives</span><span class="chev">⌄</span></summary><p class="chapter-teaser">Becoming a father changes what money means, all over again.</p></details>
-        <details class="chapter-row"><summary><span class="num">15</span><span class="title">The Rule Before Going Home</span><span class="chev">⌄</span></summary><p class="chapter-teaser">What a father's quiet strength leaves behind.</p></details>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">01</span><span class="title">The Swat Dream</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">A boy discovers that wanting things and understanding money are not the same thing.</p></div></div>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">02</span><span class="title">The Dark Sunrise</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">Turning eighteen doesn't hand you an answer — it just changes the questions.</p></div></div>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">03</span><span class="title">The Long Sunshine</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">The unglamorous years of ordinary work quietly become the foundation.</p></div></div>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">04</span><span class="title">The Wrong Turn</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">A search for relief turns into a shortcut dressed up as a solution.</p></div></div>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">05</span><span class="title">The Rehabilitation</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">Not one big decision, but a slow, structured return to honesty.</p></div></div>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">06</span><span class="title">The Delivery Days</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">A simple delivery job teaches a lesson no résumé could.</p></div></div>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">07</span><span class="title">The Investment Fever</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">Some savings and too much confidence make a familiar, costly combination.</p></div></div>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">08</span><span class="title">The Candle on the Table</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">The first product made by hand is clumsy, uneven — and the start of everything.</p></div></div>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">09</span><span class="title">The First Batch</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">A tiny order feels enormous when it's the first one that matters.</p></div></div>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">10</span><span class="title">The Marriage Equation</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">Sharing a life means learning to share uncertainty, not just a home.</p></div></div>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">11</span><span class="title">The People Behind the Numbers</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">Asking successful people about their failures, not their wins.</p></div></div>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">12</span><span class="title">The Bachelor Meetings</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">Hundreds of conversations with young men chasing the same dream.</p></div></div>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">13</span><span class="title">The Week the Business Nearly Broke</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">Real trouble doesn't arrive when you're struggling — it arrives when you finally feel safe.</p></div></div>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">14</span><span class="title">The Son Arrives</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">Becoming a father changes what money means, all over again.</p></div></div>
+        <div class="chapter-row"><button class="chapter-head" type="button"><span class="num">15</span><span class="title">The Rule Before Going Home</span><span class="chev">⌄</span></button><div class="chapter-body"><p class="chapter-teaser">What a father's quiet strength leaves behind.</p></div></div>
       </div>
     </div>
   </section>
@@ -378,13 +368,7 @@
   <section class="order" id="order">
     <div class="wrap">
       <div class="order-card">
-        <div class="price-row">
-          <div class="price-line">
-            <span class="strike">₹599</span>
-            <span class="now">₹299</span>
-          </div>
-          <span class="cap">One-time payment · Instant email delivery</span>
-        </div>
+        <h3 class="order-heading">Enter Details for the eBook</h3>
 
         <form id="orderForm" novalidate>
           <div class="field" id="f-name">
@@ -394,7 +378,7 @@
           </div>
           <div class="field" id="f-phone">
             <label for="phone">Phone number</label>
-            <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="10-digit mobile number">
+            <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="numeric" pattern="[0-9]*" maxlength="10" placeholder="10-digit mobile number">
             <p class="err">Please enter a valid phone number.</p>
           </div>
           <div class="field" id="f-email">
@@ -435,7 +419,6 @@
 
       <div class="stack">
         <button type="button" class="btn block" id="confirmPaymentBtn">Verify Payment</button>
-        <button type="button" class="link-btn" id="backBtn">← Back</button>
       </div>
     </div>
 
@@ -446,7 +429,7 @@
         <path d="M20 33 L28 41 L45 23"></path>
       </svg>
       <h3 id="successTitle">Payment under verification</h3>
-      <p>Thanks — your payment is now being verified. Once confirmed, we'll send the <em>Business Planning for 18+</em> PDF to <span class="email-hi" id="successEmail">—</span>.</p>
+      <p>Thanks — your payment is now being verified. Once confirmed, we'll send the <em>Business Planning for 18+</em> PDF at <span class="email-hi" id="successEmail">—</span>.</p>
 
       <div class="verify-note">
         This usually takes <b>24–72 hours</b>. After some time, please check your <b>Inbox</b> and your <b>Spam / Junk folder</b> too.
@@ -470,6 +453,27 @@
     // TODO: paste your Google Apps Script Web App URL here (see google-apps-script.gs)
     sheetWebAppUrl: "https://script.google.com/macros/s/AKfycbzR4AQr494VpRKc9GrVtaJTz20QPu2pBuQ3YEB8l-vIMg-UiK_CddkKsdrNDigmue1DtQ/exec"
   };
+
+  document.getElementById('phone').addEventListener('input', function(){
+    this.value = this.value.replace(/\D/g, '').slice(0, 10);
+  });
+
+  document.querySelectorAll('.chapter-head').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const row = btn.closest('.chapter-row');
+      const body = row.querySelector('.chapter-body');
+      if(row.classList.contains('open')){
+        body.style.maxHeight = body.scrollHeight + 'px';
+        requestAnimationFrame(function(){
+          row.classList.remove('open');
+          body.style.maxHeight = '0px';
+        });
+      } else {
+        row.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+    });
+  });
 
   const form = document.getElementById('orderForm');
   const backdrop = document.getElementById('backdrop');
@@ -551,7 +555,6 @@
     }
   });
 
-  document.getElementById('backBtn').addEventListener('click', closeModal);
   backdrop.addEventListener('click', function(e){
     if(e.target === backdrop) closeModal();
   });
