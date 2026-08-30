@@ -386,8 +386,10 @@
             <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com">
             <p class="err">Please enter a valid email address.</p>
           </div>
+          
+          <p id="duplicate-err" style="color: var(--danger); font-size: 13.5px; margin-bottom: 15px; display: none; font-weight: 600;"></p>
 
-          <button type="submit" class="btn block">Continue to Payment</button>
+          <button type="submit" id="submitBtn" class="btn block">Continue to Payment</button>
           <p class="order-note">We don't ship a physical book — your eBook goes to the email address above, so please double-check it before continuing.</p>
         </form>
       </div>
@@ -528,15 +530,43 @@
     return `upi://pay?pa=${CONFIG.upiId}&pn=${name}&am=${CONFIG.amount}&cu=INR&tn=${note}`;
   }
 
-  form.addEventListener('submit', function(e){
+  form.addEventListener('submit', async function(e){
     e.preventDefault();
+    const dupErr = document.getElementById('duplicate-err');
+    const submitBtn = document.getElementById('submitBtn');
+    dupErr.style.display = 'none';
     if(!validate()) return;
 
     currentEntry = {
       name: document.getElementById('name').value.trim(),
       phone: document.getElementById('phone').value.trim(),
-      email: document.getElementById('email').value.trim()
+      email: document.getElementById('email').value.trim(),
+      action: 'check' 
     };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Checking details...';
+
+    try {
+      const res = await fetch(CONFIG.sheetWebAppUrl, {
+        method: 'POST',
+        body: JSON.stringify(currentEntry)
+      });
+      const data = await res.json();
+      
+      if (data.exists) {
+        dupErr.textContent = data.message;
+        dupErr.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Continue to Payment';
+        return; // Stop form submission here
+      }
+    } catch(err) {
+      console.error('Validation check failed', err);
+    }
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Continue to Payment';
 
     document.getElementById('recapName').textContent = currentEntry.name;
     document.getElementById('upiAppLink').href = buildUpiLink();
@@ -571,11 +601,10 @@
 
   async function logToSheet(entry){
     if(!CONFIG.sheetWebAppUrl || CONFIG.sheetWebAppUrl.startsWith('PASTE_')) return;
+    entry.action = 'save';
     try{
       await fetch(CONFIG.sheetWebAppUrl, {
         method: 'POST',
-        mode: 'no-cors', // Apps Script web apps don't return CORS headers; response is opaque
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(entry)
       });
     }catch(err){
